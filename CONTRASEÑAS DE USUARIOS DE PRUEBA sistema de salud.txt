@@ -1,0 +1,21 @@
+1. Usuario PROGRAMADOR_CITAS
+Dato	Valor
+Usuario	citas_prueba
+Contraseña	Citas1234
+UsuarioId	2
+RolId	4
+Rol	PROGRAMADOR_CITAS
+
+
+"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjaXRhc19wcnVlYmEiLCJpYXQiOjE3OTU0MDQ3MzYsImV4cCI6MTc5NTQ5MTEzNn0.o4EUTCku_RdAHAD74QapmHydG2M5349jIxgvCTjvHCY",
+
+
+
+2. Usuario FARMACIA
+Dato	Valor
+Usuario	farmacia_prueba
+Contraseña	Farmacia1234
+UsuarioId	1
+RolId	3
+Rol	FARMACIA
+
