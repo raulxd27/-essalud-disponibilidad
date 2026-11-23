@@ -1,0 +1,101 @@
+﻿<div class="login-container">
+
+  <div class="login-card">
+
+    <div class="login-header">
+
+      <div class="logo">
+        <span>+</span>
+      </div>
+
+      <h1>EsSalud</h1>
+
+      <p>Sistema de disponibilidad de medicamentos y citas</p>
+
+    </div>
+
+    <div class="login-content">
+
+      <h2>Iniciar sesión</h2>
+
+      <p class="subtitle">
+        Ingrese sus credenciales para continuar
+      </p>
+
+      <form (ngSubmit)="iniciarSesion()" #loginForm="ngForm">
+
+        <div class="form-group">
+
+          <label for="usuario">Usuario</label>
+
+          <input
+            id="usuario"
+            type="text"
+            name="nombreUsuario"
+            [(ngModel)]="nombreUsuario"
+            placeholder="Ingrese su usuario"
+            autocomplete="username"
+            required
+            [disabled]="cargando"
+          />
+
+        </div>
+
+        <div class="form-group">
+
+          <label for="contrasena">Contraseña</label>
+
+          <div class="password-container">
+
+            <input
+              id="contrasena"
+              [type]="mostrarContrasena ? 'text' : 'password'"
+              name="contrasena"
+              [(ngModel)]="contrasena"
+              placeholder="Ingrese su contraseña"
+              autocomplete="current-password"
+              required
+              [disabled]="cargando"
+            />
+
+            <button
+              type="button"
+              class="toggle-password"
+              (click)="mostrarContrasena = !mostrarContrasena"
+            >
+              {{ mostrarContrasena ? 'Ocultar' : 'Mostrar' }}
+            </button>
+
+          </div>
+
+        </div>
+
+        @if (mensajeError) {
+          <div class="error-message">
+            {{ mensajeError }}
+          </div>
+        }
+
+        <button
+          type="submit"
+          class="btn-login"
+          [disabled]="cargando || loginForm.invalid"
+        >
+          @if (cargando) {
+            <span>Verificando...</span>
+          } @else {
+            <span>Ingresar al sistema</span>
+          }
+        </button>
+
+      </form>
+
+    </div>
+
+    <div class="login-footer">
+      Sistema académico de simulación · EsSalud
+    </div>
+
+  </div>
+
+</div>

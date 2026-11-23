@@ -1,0 +1,113 @@
+<div class="dashboard-container">
+
+  <!-- MENÚ LATERAL -->
+  <aside class="sidebar">
+
+    <div class="sidebar-brand">
+      <div class="brand-icon">E</div>
+      <div>
+        <h2>EsSalud</h2>
+        <span>Disponibilidad</span>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <span class="section-title">MENÚ PRINCIPAL</span>
+
+      <nav class="sidebar-nav">
+
+        <a routerLink="/inicio"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: true }">
+          <span class="nav-icon">⌂</span>
+          <span>Panel principal</span>
+        </a>
+
+        <a routerLink="/establecimientos" routerLinkActive="active">
+          <span class="nav-icon">▣</span>
+          <span>Establecimientos</span>
+        </a>
+
+        <a routerLink="/especialidades" routerLinkActive="active">
+          <span class="nav-icon">✚</span>
+          <span>Especialidades</span>
+        </a>
+
+        <a routerLink="/medicamentos" routerLinkActive="active">
+          <span class="nav-icon">▤</span>
+          <span>Medicamentos</span>
+        </a>
+
+        <a routerLink="/citas" routerLinkActive="active">
+          <span class="nav-icon">▣</span>
+          <span>Disponibilidad de citas</span>
+        </a>
+
+        <a routerLink="/auditoria" routerLinkActive="active">
+          <span class="nav-icon">◷</span>
+          <span>Auditoría</span>
+        </a>
+
+      </nav>
+    </div>
+
+    <!-- PIE DEL MENÚ -->
+    <div class="sidebar-footer">
+
+      <div class="system-status">
+        <span class="status-indicator"></span>
+        Sistema operativo
+      </div>
+
+      <small>Proyecto académico · 2026</small>
+
+    </div>
+
+  </aside>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="main-content">
+
+    <!-- BARRA SUPERIOR -->
+    <header class="topbar">
+
+      <div class="topbar-title">
+        <h1>{{ tituloModulo }}</h1>
+        <p>Gestión de disponibilidad de servicios de salud</p>
+      </div>
+
+      <!-- PERFIL DEL USUARIO -->
+      <div class="user-profile">
+
+        <div class="user-avatar">
+          {{ usuario?.nombres?.charAt(0) || 'U' }}
+        </div>
+
+        <div class="user-information">
+          <strong>
+            {{ usuario?.nombres }} {{ usuario?.apellidos }}
+          </strong>
+
+          <span>{{ usuario?.rol }}</span>
+        </div>
+
+        <button
+          class="logout-button"
+          (click)="cerrarSesion()">
+          Cerrar sesión
+        </button>
+
+      </div>
+
+    </header>
+
+    <!-- CONTENIDO DINÁMICO DE LOS MÓDULOS -->
+    <section class="dashboard-content">
+
+      <router-outlet></router-outlet>
+
+    </section>
+
+  </main>
+
+</div>

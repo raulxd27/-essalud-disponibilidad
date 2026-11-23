@@ -1,0 +1,155 @@
+<div class="medicamentos-container">
+
+  <!-- ENCABEZADO -->
+  <div class="page-header">
+    <div>
+      <h2>Catálogo de Medicamentos</h2>
+      <p>Consulta los medicamentos registrados y sus precios referenciales.</p>
+    </div>
+
+    <button
+      class="btn-actualizar"
+      (click)="listarMedicamentos()"
+      [disabled]="cargando">
+      <span>↻</span>
+      Actualizar
+    </button>
+  </div>
+
+  <!-- INDICADORES -->
+  <div class="resumen-grid">
+
+    <div class="resumen-card">
+      <div class="resumen-icon icon-azul">✚</div>
+      <div>
+        <span>Total de medicamentos</span>
+        <h3>{{ medicamentos.length }}</h3>
+      </div>
+    </div>
+
+    <div class="resumen-card">
+      <div class="resumen-icon icon-verde">✓</div>
+      <div>
+        <span>Resultados encontrados</span>
+        <h3>{{ medicamentosFiltrados.length }}</h3>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- LISTADO -->
+  <div class="tabla-card">
+
+    <div class="tabla-header">
+      <div>
+        <h3>Listado de medicamentos</h3>
+        <p>Información obtenida de la base de datos.</p>
+      </div>
+
+      <div class="buscador">
+        <span>⌕</span>
+
+        <input
+          type="text"
+          placeholder="Buscar medicamento..."
+          [(ngModel)]="busqueda"
+          (input)="filtrarMedicamentos()">
+      </div>
+    </div>
+
+    <!-- CARGANDO -->
+    <div class="estado-mensaje" *ngIf="cargando">
+      <div class="spinner"></div>
+      <p>Cargando medicamentos...</p>
+    </div>
+
+    <!-- ERROR -->
+    <div class="estado-error" *ngIf="mensajeError">
+      {{ mensajeError }}
+    </div>
+
+    <!-- TABLA -->
+    <div
+      class="tabla-responsive"
+      *ngIf="!cargando && !mensajeError">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>MEDICAMENTO</th>
+            <th>PRESENTACIÓN</th>
+            <th>DESCRIPCIÓN</th>
+            <th>CÓDIGO PETITORIO</th>
+            <th>PRECIO REFERENCIAL</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let medicamento of medicamentosFiltrados">
+
+            <td>
+              <span class="codigo">
+                #{{ medicamento.medicamentoId }}
+              </span>
+            </td>
+
+            <td>
+              <div class="nombre-medicamento">
+                <div class="medicamento-icono">✚</div>
+                <strong>{{ medicamento.nombre }}</strong>
+              </div>
+            </td>
+
+            <td>
+              {{ medicamento.presentacion }}
+            </td>
+
+            <td>
+              {{ medicamento.descripcion }}
+            </td>
+
+            <td>
+              <span class="petitorio">
+                {{ medicamento.codigoPetitorio ?? 'No registrado' }}
+              </span>
+            </td>
+
+            <td>
+              <span class="precio">
+                {{ formatearPrecio(medicamento.precioReferencial) }}
+              </span>
+            </td>
+
+          </tr>
+
+          <!-- SIN RESULTADOS -->
+          <tr *ngIf="medicamentosFiltrados.length === 0">
+            <td colspan="6" class="sin-resultados">
+              No se encontraron medicamentos.
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <!-- PIE -->
+    <div
+      class="tabla-footer"
+      *ngIf="!cargando && !mensajeError">
+
+      <span>
+        Mostrando {{ medicamentosFiltrados.length }}
+        de {{ medicamentos.length }} medicamentos
+      </span>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,34 @@
+﻿# Java / Maven
+**/target/
+**/build/
+**/.gradle/
+
+# Angular / Node.js
+**/node_modules/
+**/dist/
+**/.angular/cache/
+**/coverage/
+
+# IDE
+**/.idea/
+**/.vscode/
+**/*.iml
+
+# Variables de entorno y credenciales
+**/.env
+**/.env.*
+!**/.env.example
+**/application-local.properties
+**/application-secret.properties
+**/credentials.json
+**/*-secrets.properties
+**/*-credentials.*
+**/classpath.txt
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log

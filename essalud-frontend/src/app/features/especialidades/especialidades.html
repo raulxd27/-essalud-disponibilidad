@@ -1,0 +1,137 @@
+<div class="especialidades-container">
+
+  <!-- ENCABEZADO -->
+  <div class="page-header">
+    <div>
+      <h2>Especialidades Médicas</h2>
+      <p>Consulta las especialidades médicas disponibles en los establecimientos de salud.</p>
+    </div>
+
+    <button class="btn-actualizar"
+            (click)="listarEspecialidades()"
+            [disabled]="cargando">
+      <span>↻</span>
+      Actualizar
+    </button>
+  </div>
+
+  <!-- INDICADORES -->
+  <div class="resumen-grid">
+
+    <div class="resumen-card">
+      <div class="resumen-icon icon-azul">✚</div>
+      <div>
+        <span>Total de especialidades</span>
+        <h3>{{ especialidades.length }}</h3>
+      </div>
+    </div>
+
+    <div class="resumen-card">
+      <div class="resumen-icon icon-verde">✓</div>
+      <div>
+        <span>Especialidades registradas</span>
+        <h3>{{ especialidades.length }}</h3>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TABLA -->
+  <div class="tabla-card">
+
+    <div class="tabla-header">
+      <div>
+        <h3>Listado de especialidades</h3>
+        <p>Información registrada en el sistema</p>
+      </div>
+
+      <div class="buscador">
+        <span>⌕</span>
+
+        <input
+          type="text"
+          placeholder="Buscar especialidad..."
+          [(ngModel)]="busqueda"
+          (input)="filtrarEspecialidades()">
+      </div>
+    </div>
+
+    <!-- CARGANDO -->
+    <div class="estado-mensaje" *ngIf="cargando">
+      <div class="spinner"></div>
+      <p>Cargando especialidades...</p>
+    </div>
+
+    <!-- ERROR -->
+    <div class="estado-error" *ngIf="mensajeError">
+      {{ mensajeError }}
+    </div>
+
+    <!-- TABLA DE DATOS -->
+    <div class="tabla-responsive"
+         *ngIf="!cargando && !mensajeError">
+
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>ESPECIALIDAD</th>
+            <th>DESCRIPCIÓN</th>
+            <th>ESTADO</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let especialidad of especialidadesFiltradas">
+
+            <td>
+              <span class="codigo">
+                #{{ especialidad.especialidadId }}
+              </span>
+            </td>
+
+            <td>
+              <div class="nombre-especialidad">
+                <div class="especialidad-icono">✚</div>
+
+                <strong>{{ especialidad.nombre }}</strong>
+              </div>
+            </td>
+
+            <td>{{ especialidad.descripcion }}</td>
+
+            <td>
+              <span class="estado-activo">
+                <span class="punto"></span>
+                Registrada
+              </span>
+            </td>
+
+          </tr>
+
+          <tr *ngIf="especialidadesFiltradas.length === 0">
+            <td colspan="4" class="sin-resultados">
+              No se encontraron especialidades.
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+
+    </div>
+
+    <!-- PIE -->
+    <div class="tabla-footer"
+         *ngIf="!cargando && !mensajeError">
+
+      <span>
+        Mostrando {{ especialidadesFiltradas.length }}
+        de {{ especialidades.length }} especialidades
+      </span>
+
+    </div>
+
+  </div>
+
+</div>

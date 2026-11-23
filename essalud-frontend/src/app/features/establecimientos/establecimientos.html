@@ -1,0 +1,118 @@
+<div class="page-container">
+
+  <!-- ENCABEZADO -->
+  <div class="page-header">
+    <div>
+      <h1>Establecimientos de Salud</h1>
+      <p>Consulta y administra los establecimientos registrados en el sistema.</p>
+    </div>
+
+    <button class="btn-refresh" (click)="listarEstablecimientos()">
+      ↻ Actualizar
+    </button>
+  </div>
+
+  <!-- RESUMEN -->
+  <div class="summary-card">
+    <div class="summary-icon">🏥</div>
+    <div>
+      <span>Total de establecimientos</span>
+      <h2>{{ establecimientos.length }}</h2>
+    </div>
+  </div>
+
+  <!-- BUSCADOR -->
+  <div class="table-container">
+
+    <div class="table-header">
+      <div>
+        <h2>Listado de establecimientos</h2>
+        <p>Información registrada en la base de datos.</p>
+      </div>
+
+      <div class="search-box">
+        <span>⌕</span>
+        <input
+          type="text"
+          placeholder="Buscar establecimiento..."
+          [(ngModel)]="busqueda"
+          (ngModelChange)="filtrarEstablecimientos()">
+      </div>
+    </div>
+
+    <!-- CARGANDO -->
+    <div class="loading" *ngIf="cargando">
+      <div class="spinner"></div>
+      <p>Cargando establecimientos...</p>
+    </div>
+
+    <!-- ERROR -->
+    <div class="error-message" *ngIf="mensajeError">
+      {{ mensajeError }}
+      <button (click)="listarEstablecimientos()">Reintentar</button>
+    </div>
+
+    <!-- TABLA -->
+    <div class="table-responsive"
+         *ngIf="!cargando && !mensajeError">
+
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>ESTABLECIMIENTO</th>
+            <th>DIRECCIÓN</th>
+            <th>DISTRITO</th>
+            <th>PROVINCIA</th>
+            <th>DEPARTAMENTO</th>
+            <th>TELÉFONO</th>
+            <th>ESTADO</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let establecimiento of establecimientosFiltrados">
+
+            <td>{{ establecimiento.establecimientoId }}</td>
+
+            <td class="name-cell">
+              {{ establecimiento.nombre }}
+            </td>
+
+            <td>{{ establecimiento.direccion || '—' }}</td>
+
+            <td>{{ establecimiento.distrito || '—' }}</td>
+
+            <td>{{ establecimiento.provincia || '—' }}</td>
+
+            <td>{{ establecimiento.departamento || '—' }}</td>
+
+            <td>{{ establecimiento.telefono || '—' }}</td>
+
+            <td>
+              <span
+                class="status-badge"
+                [class.active]="establecimiento.activo"
+                [class.inactive]="!establecimiento.activo">
+
+                {{ establecimiento.activo ? 'Activo' : 'Inactivo' }}
+
+              </span>
+            </td>
+
+          </tr>
+
+          <tr *ngIf="establecimientosFiltrados.length === 0">
+            <td colspan="8" class="empty-message">
+              No se encontraron establecimientos.
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+
+    </div>
+
+  </div>
+
+</div>

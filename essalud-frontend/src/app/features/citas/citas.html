@@ -1,0 +1,433 @@
+<div class="modulo-citas">
+
+  <!-- ENCABEZADO -->
+  <div class="encabezado-modulo">
+    <div>
+      <h2>Disponibilidad de citas médicas</h2>
+      <p>Consulta y administra los horarios y cupos disponibles.</p>
+    </div>
+
+    <button
+      type="button"
+      class="btn-publicar"
+      (click)="abrirFormulario()"
+      [disabled]="guardando || cambiandoEstadoId !== null">
+      + Publicar nueva disponibilidad
+    </button>
+  </div>
+
+  <!-- MENSAJE DE ÉXITO -->
+  <div class="mensaje-exito" *ngIf="mensajeExito">
+    ✓ {{ mensajeExito }}
+  </div>
+
+  <!-- FORMULARIO -->
+  <section class="panel-formulario" *ngIf="mostrarFormulario">
+
+    <div class="formulario-encabezado">
+      <div>
+        <h3>
+          {{ editandoId !== null
+            ? 'Editar disponibilidad N.° ' + editandoId
+            : 'Registrar nueva disponibilidad' }}
+        </h3>
+
+        <p>
+          {{ editandoId !== null
+            ? 'Modifique los datos de la disponibilidad seleccionada.'
+            : 'Complete los datos del horario de atención médica.' }}
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="btn-cerrar"
+        (click)="cerrarFormulario()"
+        [disabled]="guardando">
+        ✕
+      </button>
+    </div>
+
+    <form (ngSubmit)="publicarCita()" #formularioCita="ngForm">
+
+      <div class="formulario-grid">
+
+        <!-- ESPECIALIDAD -->
+        <div class="campo">
+          <label for="nuevaEspecialidad">Especialidad médica *</label>
+
+          <select
+            id="nuevaEspecialidad"
+            name="especialidadId"
+            [(ngModel)]="nuevaCita.especialidadId"
+            required>
+
+            <option [ngValue]="0" disabled>
+              Seleccione una especialidad
+            </option>
+
+            <option
+              *ngFor="let especialidad of especialidades"
+              [ngValue]="especialidad.especialidadId">
+              {{ especialidad.nombre }}
+            </option>
+
+          </select>
+        </div>
+
+        <!-- ESTABLECIMIENTO -->
+        <div class="campo">
+          <label for="nuevoEstablecimiento">Establecimiento de salud *</label>
+
+          <select
+            id="nuevoEstablecimiento"
+            name="establecimientoId"
+            [(ngModel)]="nuevaCita.establecimientoId"
+            required>
+
+            <option [ngValue]="0" disabled>
+              Seleccione un establecimiento
+            </option>
+
+            <option
+              *ngFor="let establecimiento of establecimientos"
+              [ngValue]="establecimiento.establecimientoId">
+              {{ establecimiento.nombre }}
+            </option>
+
+          </select>
+        </div>
+
+        <!-- FECHA -->
+        <div class="campo">
+          <label for="nuevaFecha">Fecha de atención *</label>
+
+          <input
+            type="date"
+            id="nuevaFecha"
+            name="fechaAtencion"
+            [(ngModel)]="nuevaCita.fechaAtencion"
+            [min]="fechaMinima"
+            required>
+        </div>
+
+        <!-- HORA INICIO -->
+        <div class="campo">
+          <label for="horaInicio">Hora de inicio *</label>
+
+          <input
+            type="time"
+            id="horaInicio"
+            name="horaInicio"
+            [(ngModel)]="nuevaCita.horaInicio"
+            required>
+        </div>
+
+        <!-- HORA FIN -->
+        <div class="campo">
+          <label for="horaFin">Hora de finalización *</label>
+
+          <input
+            type="time"
+            id="horaFin"
+            name="horaFin"
+            [(ngModel)]="nuevaCita.horaFin"
+            required>
+        </div>
+
+        <!-- CUPOS -->
+        <div class="campo">
+          <label for="cantidadCupos">Cantidad de cupos *</label>
+
+          <input
+            type="number"
+            id="cantidadCupos"
+            name="cantidadCupos"
+            [value]="nuevaCita.cantidadCupos || ''"
+            (input)="actualizarCantidadCupos($event)"
+            min="1"
+            step="1"
+            placeholder="Ingrese la cantidad de cupos"
+            required>
+        </div>
+
+      </div>
+
+      <!-- ERROR DEL FORMULARIO -->
+      <div class="mensaje-error" *ngIf="errorFormulario">
+        ⚠️ {{ errorFormulario }}
+      </div>
+
+      <!-- ACCIONES -->
+      <div class="acciones-formulario">
+
+        <button
+          type="submit"
+          class="btn-guardar"
+          [disabled]="guardando || formularioCita.invalid">
+
+          {{
+            guardando
+              ? 'Guardando...'
+              : (editandoId !== null
+                  ? '✓ Actualizar disponibilidad'
+                  : '✓ Guardar disponibilidad')
+          }}
+
+        </button>
+
+        <button
+          type="button"
+          class="btn-cancelar"
+          (click)="cerrarFormulario()"
+          [disabled]="guardando">
+
+          Cancelar
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </section>
+
+  <!-- PANEL DE FILTROS -->
+  <section class="panel-filtros">
+
+    <h3>🔎 Filtros de búsqueda</h3>
+
+    <div class="filtros-grid">
+
+      <!-- FILTRO ESPECIALIDAD -->
+      <div class="campo">
+        <label for="especialidad">Especialidad médica</label>
+
+        <select
+          id="especialidad"
+          [(ngModel)]="especialidadId">
+
+          <option [ngValue]="null">
+            Todas las especialidades
+          </option>
+
+          <option
+            *ngFor="let especialidad of especialidades"
+            [ngValue]="especialidad.especialidadId">
+            {{ especialidad.nombre }}
+          </option>
+
+        </select>
+      </div>
+
+      <!-- FILTRO ESTABLECIMIENTO -->
+      <div class="campo">
+        <label for="establecimiento">Establecimiento de salud</label>
+
+        <select
+          id="establecimiento"
+          [(ngModel)]="establecimientoId">
+
+          <option [ngValue]="null">
+            Todos los establecimientos
+          </option>
+
+          <option
+            *ngFor="let establecimiento of establecimientos"
+            [ngValue]="establecimiento.establecimientoId">
+            {{ establecimiento.nombre }}
+          </option>
+
+        </select>
+      </div>
+
+      <!-- FILTRO FECHA -->
+      <div class="campo">
+        <label for="fecha">Fecha de atención</label>
+
+        <input
+          type="date"
+          id="fecha"
+          [(ngModel)]="fecha">
+
+      </div>
+
+    </div>
+
+    <!-- ACCIONES DE FILTROS -->
+    <div class="acciones-filtros">
+
+      <button
+        type="button"
+        class="btn-buscar"
+        (click)="consultarCitas()"
+        [disabled]="cargando">
+
+        🔍 Consultar disponibilidad
+
+      </button>
+
+      <button
+        type="button"
+        class="btn-limpiar"
+        (click)="limpiarFiltros()"
+        [disabled]="cargando">
+
+        Limpiar filtros
+
+      </button>
+
+    </div>
+
+    <!-- MENSAJE DE ERROR -->
+    <div class="mensaje-error" *ngIf="mensajeError">
+      ⚠️ {{ mensajeError }}
+    </div>
+
+  </section>
+
+  <!-- PANEL DE RESULTADOS -->
+  <section class="panel-resultados">
+
+    <div class="resultados-encabezado">
+
+      <div>
+        <h3>Horarios disponibles</h3>
+        <p>Resultados de la consulta de disponibilidad.</p>
+      </div>
+
+      <span class="contador-resultados">
+        {{ citas.length }} registros
+      </span>
+
+    </div>
+
+    <!-- CARGANDO -->
+    <div class="cargando" *ngIf="cargando">
+      Consultando disponibilidad...
+    </div>
+
+    <!-- TABLA -->
+    <div class="tabla-contenedor" *ngIf="!cargando">
+
+      <table *ngIf="citas.length > 0; else sinResultados">
+
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Especialidad</th>
+            <th>Establecimiento</th>
+            <th>Fecha</th>
+            <th>Hora de inicio</th>
+            <th>Hora de fin</th>
+            <th>Cupos</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let cita of citas">
+
+            <td>{{ cita.disponibilidadCitaId }}</td>
+
+            <td>{{ cita.nombreEspecialidad }}</td>
+
+            <td>{{ cita.nombreEstablecimiento }}</td>
+
+            <td>{{ cita.fechaAtencion | date:'dd/MM/yyyy' }}</td>
+
+            <td>{{ cita.horaInicio }}</td>
+
+            <td>{{ cita.horaFin }}</td>
+
+            <td>
+              <span class="cupos">
+                {{ cita.cantidadCupos }}
+              </span>
+            </td>
+
+            <!-- ESTADO -->
+            <td>
+              <span
+                class="estado"
+                [ngClass]="obtenerClaseEstado(cita.estado)">
+                {{ cita.estado }}
+              </span>
+            </td>
+
+            <!-- ACCIONES -->
+            <td class="acciones-tabla">
+
+              <!-- EDITAR -->
+              <button
+                type="button"
+                class="btn-editar"
+                (click)="editarDisponibilidad(cita)"
+                [disabled]="guardando || cambiandoEstadoId !== null">
+                ✏️ Editar
+              </button>
+
+              <!-- DESACTIVAR -->
+              <button
+                *ngIf="cita.estado.toLowerCase() === 'disponible'"
+                type="button"
+                class="btn-desactivar"
+                (click)="cambiarEstado(cita)"
+                [disabled]="guardando || cambiandoEstadoId !== null">
+
+                {{
+                  cambiandoEstadoId === cita.disponibilidadCitaId
+                    ? 'Procesando...'
+                    : '⛔ Desactivar'
+                }}
+
+              </button>
+
+              <!-- REACTIVAR -->
+              <button
+                *ngIf="cita.estado.toLowerCase() === 'inactivo'"
+                type="button"
+                class="btn-reactivar"
+                (click)="cambiarEstado(cita)"
+                [disabled]="guardando || cambiandoEstadoId !== null">
+
+                {{
+                  cambiandoEstadoId === cita.disponibilidadCitaId
+                    ? 'Procesando...'
+                    : '↻ Reactivar'
+                }}
+
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+      <!-- SIN RESULTADOS -->
+      <ng-template #sinResultados>
+
+        <div class="sin-resultados">
+
+          <div class="icono-vacio">📅</div>
+
+          <h4>No hay horarios para mostrar</h4>
+
+          <p>
+            Selecciona los filtros y consulta la disponibilidad de citas.
+          </p>
+
+        </div>
+
+      </ng-template>
+
+    </div>
+
+  </section>
+
+</div>
